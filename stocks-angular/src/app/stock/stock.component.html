@@ -29,10 +29,13 @@
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <a href="{{stock?.website}}"><li class="list-group-item">{{stock?.name}}</li></a>
+                    <a (click)="onOpenModal(stock, 'info')"><li class="list-group-item">{{stock?.name}}</li></a>
                     <li class="list-group-item"><a href="{{stock?.website}}"> {{stock?.ticker}} Financials</a></li>
                 </ul>
                 <div class="card-body">
+                    <div class="float-left btn-group btn-group-sm">
+                        <a (click)="onOpenModal(stock, 'addComment')" class="btn btn-primary tooltips" data-placement="left" data-toggle="tooltip" data-original-title="Comment"><i class="fa fa-envelope"></i> </a>
+                    </div>
                     <div class="float-right btn-group btn-group-sm">
                         <a (click)="onOpenModal(stock, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
                         <a (click)="onOpenModal(stock, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
@@ -156,3 +159,36 @@
        </div>
     </div>
 </div>
+
+<!-- Info Modal -->
+<div class="modal fade" id="infoStockModal" tabindex="-1" role="dialog" aria-labelledby="stockinfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="stockinfoModalLabel">Info Stock {{editedStock?.ticker}}</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body">
+             <form #editForm="ngForm">
+                <input type="hidden" ngModel="{{infoStock?.stockId}}"  name="stockId" class="form-control" id="stockId" placeholder="Id" />
+                <div class="form-group">
+                   <label for="name">Name</label>
+                   <input type="text" [readonly]="true" ngModel="{{infoStock?.name}}" name="name" class="form-control" id="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                   <label for="ticker">Ticker</label>
+                   <input type="text" [readonly]="true" ngModel="{{infoStock?.ticker}}" name="ticker" class="form-control" id="ticker" placeholder="Ticker">
+                </div>
+                <div class="form-group">
+                    <label for="ticker">Comentarios</label>
+                    <li *ngFor="let opiniao of infoStock?.opinioes">
+                        <a> {{opiniao.textoOpiniao}}</a>
+                    </li>
+                 </div>
+             </form>
+          </div>
+       </div>
+    </div>
+  </div>

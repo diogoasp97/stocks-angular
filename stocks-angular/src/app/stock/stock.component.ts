@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Opiniao } from '../opiniao/opiniao';
 import { Stock } from './stock';
 import { StockService } from './stock.service';
 
@@ -14,11 +15,14 @@ export class StockComponent implements OnInit {
   public stocks: Stock[];
   public editedStock: Stock;
   public deletedStock: Stock;
+  public infoStock: Stock;
+  public comentarios: String[];
 
   constructor(private stockService: StockService) { }
 
   ngOnInit(): void {
     this.getStocks();
+    this.test();
   }
 
   public getStocks(): void {
@@ -30,6 +34,12 @@ export class StockComponent implements OnInit {
         alert(error.message);
       }
     );
+  }
+
+  public test(): void{
+    for(const stock of this.stocks){
+      this.comentarios.push("lol");
+    }
   }
 
   public onOpenModal(stock: Stock, mode: string): void{
@@ -51,10 +61,13 @@ export class StockComponent implements OnInit {
       button.setAttribute('data-target', '#deleteStockModal');
       this.deletedStock = stock;
     }
+    if(mode==='info'){
+      button.setAttribute('data-target', '#infoStockModal');
+      this.infoStock = stock;
+    }
 
     container.appendChild(button);
     button.click();
-
   }
 
   public searchStocks(key: string): void{
