@@ -184,7 +184,7 @@
                 <div class="form-group">
                     <label for="ticker">Comentarios</label>
                     <li *ngFor="let opiniao of infoStock?.opinioes">
-                        <a> {{opiniao.textoOpiniao}}</a>
+                        <a> ({{opiniao.date | date:'dd-MM-yyyy'}}) - {{opiniao.textoOpiniao}}</a>
                     </li>
                  </div>
              </form>
