@@ -1,44 +1,158 @@
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" style="color: white;">Stock Manager</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbar">
-        <span class="navbar-toggler-icon"></span>
+    <a class="navbar-brand" style="color:white;">Employee Manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarColor92">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" data-toggle="modal" data-target="#exampleModal">Add Stock</a>
-            </li>
-        </ul>
-
+    <div class="collapse navbar-collapse" id="navbarColor02">
+       <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+             <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Stock <span class="sr-only">(current)</span></a>
+          </li>
+       </ul>
+       <form class="form-inline my-2 my-lg-0">
+          <input type="search" (ngModelChange)="searchStocks(key.value)" #key="ngModel" ngModel
+           name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search stocks" required>
+       </form>
     </div>
+  </nav>
 
-
-</nav>
-
-<div class="container">
+<div class="container" id="main-container">
     <div class="row">
         <div *ngFor="let stock of stocks" class="col-md-6 col-xl-3">
             <div class="card m-b-30">
                 <div class="card-body row">
                     <div class="col-6">
-                        <a href="{{stock?.website}}"><img src="{{stock?.logo}}" alt="" class="img-fluid rounded-circle w-80"></a>
+                        <a><img src="{{stock?.logo}}" alt="" class="img-fluid rounded-circle w-90"></a>
                     </div>
                     <div class="col-6 card-title align-self-center mb-0">
                         <h5>{{stock?.ticker}}</h5>
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">{{stock?.name}}</li>
+                    <a href="{{stock?.website}}"><li class="list-group-item">{{stock?.name}}</li></a>
                     <li class="list-group-item"><a href="{{stock?.website}}"> {{stock?.ticker}} Financials</a></li>
                 </ul>
                 <div class="card-body">
                     <div class="float-right btn-group btn-group-sm">
-                        <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
-                        <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                        <a (click)="onOpenModal(stock, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a (click)="onOpenModal(stock, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Add Stock Modal -->
+<div class="modal fade" id="addStockModal" tabindex="-1" role="dialog" aria-labelledby="addStockModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addStockModalLabel">Add Stock</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form #addForm="ngForm" (ngSubmit)="onAddStock(addForm)">
+            <div class="form-group">
+               <label for="name">Name</label>
+               <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+               <label for="ticker">Ticker</label>
+               <input type="text" ngModel name="ticker" class="form-control" id="ticker" placeholder="Ticker" required>
+            </div>
+            <div class="form-group">
+               <label for="marketCap">Market Cap</label>
+               <input type="text" ngModel name="marketCap" class="form-control" id="marketCap" placeholder="Market Cap" required>
+            </div>
+            <div class="form-group">
+               <label for="simMarketCap">Sim Market Cap</label>
+               <input type="text" ngModel name="simMarketCap" class="form-control" id="simMarketCap" placeholder="Sim Market Cap">
+            </div>
+            <div class="form-group">
+               <label for="website">Website</label>
+               <input type="text" ngModel name="website" class="form-control" id="website" placeholder="Website">
+            </div>
+            <div class="form-group">
+                <label for="logo">Logo</label>
+                <input type="text" ngModel name="logo" class="form-control" id="logo" placeholder="Logo">
+             </div>
+            <div class="modal-footer">
+               <button type="button" id="add-stock-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+            </div>
+            </form>
+         </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- Edit Modal -->
+<div class="modal fade" id="updateStockModal" tabindex="-1" role="dialog" aria-labelledby="stockEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="updateStockModalLabel">Edit Stock {{editedStock?.ticker}}</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body">
+             <form #editForm="ngForm">
+                <input type="hidden" ngModel="{{editedStock?.stockId}}"  name="stockId" class="form-control" id="stockId" placeholder="Id" />
+                <div class="form-group">
+                   <label for="name">Name</label>
+                   <input type="text" ngModel="{{editedStock?.name}}" name="name" class="form-control" id="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                   <label for="ticker">Ticker</label>
+                   <input type="text" ngModel="{{editedStock?.ticker}}" name="ticker" class="form-control" id="ticker" placeholder="Ticker">
+                </div>
+                <div class="form-group">
+                   <label for="marketCap">Market Cap</label>
+                   <input type="text" ngModel="{{editedStock?.marketCap}}" name="marketCap" class="form-control" id="marketCap" placeholder="Market Cap">
+                </div>
+                <div class="form-group">
+                   <label for="simMarketCap">Sim MarketCap</label>
+                   <input type="text" ngModel="{{editedStock?.simMarketCap}}" name="simMarketCap" class="form-control" id="simMarketCap" name="phone" placeholder="Sim MarketCap">
+                </div>
+                <div class="form-group">
+                   <label for="website">Website</label>
+                   <input type="text" ngModel="{{editedStock?.website}}" name="website" class="form-control" id="website" placeholder="Website">
+                </div>
+                <div class="form-group">
+                    <label for="logo">Logo</label>
+                    <input type="text" ngModel="{{editedStock?.logo}}" name="logo" class="form-control" id="logo" placeholder="Logo">
+                 </div>
+                <div class="modal-footer">
+                   <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                   <button (click)="onUpdateStock(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+                </div>
+             </form>
+          </div>
+       </div>
+    </div>
+  </div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteStockModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="deleteModelLabel">Delete Stock</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body">
+             <p>You sure you want to delete {{deletedStock?.ticker}}?</p>
+             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button (click)="onDeleteStock(deletedStock?.stockId)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+             </div>
+          </div>
+       </div>
     </div>
 </div>

@@ -9,12 +9,24 @@ import { environment } from 'src/environments/environment';
 })
 
 export class StockService {
-    private apiServerUtl = environment.apiBaseUrl;
+    private apiServerUrl = environment.apiBaseUrl;
 
     constructor(private http: HttpClient){}
 
     public getStocks(): Observable<Stock[]>{
-        return this.http.get<Stock[]>(`${this.apiServerUtl}/stock/all`);
+        return this.http.get<Stock[]>(`${this.apiServerUrl}/stock/all`);
+    }
+
+    public addStock(stock: Stock): Observable<Stock> {
+      return this.http.post<Stock>(`${this.apiServerUrl}/stock/add`, stock);
+    }
+    
+    public updateStock(stock: Stock): Observable<Stock> {
+      return this.http.put<Stock>(`${this.apiServerUrl}/stock/update`, stock);
+    }
+    
+    public deleteStock(stockId: number): Observable<void> {
+      return this.http.delete<void>(`${this.apiServerUrl}/stock/delete/${stockId}`);
     }
 
 

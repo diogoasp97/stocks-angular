@@ -1,7 +1,7 @@
 import { Opiniao } from "../opiniao/opiniao";
 
 export interface Stock {
-    id: number;
+    stockId: number;
     name: string;
     ticker: string;
     marketCap: string;

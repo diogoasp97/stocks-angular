@@ -6,17 +6,20 @@ import { AppComponent } from './app.component';
 import { StockComponent } from './stock/stock.component';
 import { OpiniaoComponent } from './opiniao/opiniao.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     StockComponent,
-    OpiniaoComponent
+    OpiniaoComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
