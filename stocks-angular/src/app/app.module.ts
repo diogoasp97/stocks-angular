@@ -7,6 +7,7 @@ import { StockComponent } from './stock/stock.component';
 import { OpiniaoComponent } from './opiniao/opiniao.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import {DatePipe} from '@angular/common';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

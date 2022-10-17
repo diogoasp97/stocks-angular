@@ -34,7 +34,7 @@
                 </ul>
                 <div class="card-body">
                     <div class="float-left btn-group btn-group-sm">
-                        <a (click)="onOpenModal(stock, 'addComment')" class="btn btn-primary tooltips" data-placement="left" data-toggle="tooltip" data-original-title="Comment"><i class="fa fa-envelope"></i> </a>
+                        <a (click)="onOpenModal(stock, 'comment')" class="btn btn-primary tooltips" data-placement="left" data-toggle="tooltip" data-original-title="Comment"><i class="fa fa-envelope"></i> </a>
                     </div>
                     <div class="float-right btn-group btn-group-sm">
                         <a (click)="onOpenModal(stock, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
@@ -183,7 +183,7 @@
                 </div>
                 <div class="form-group">
                     <label for="ticker">Comentarios</label>
-                    <li *ngFor="let opiniao of infoStock?.opinioes">
+                    <li *ngFor="let opiniao of infoStock?.opinioes.slice().reverse()">
                         <a> ({{opiniao.date | date:'dd-MM-yyyy'}}) - {{opiniao.textoOpiniao}}</a>
                     </li>
                  </div>
@@ -191,4 +191,39 @@
           </div>
        </div>
     </div>
-  </div>
+</div>
+
+<!-- Comment Modal -->
+<div class="modal fade" id="commentStockModal" tabindex="-1" role="dialog" aria-labelledby="stockCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="stockCommentModalLabel">Comment Stock {{editedStock?.ticker}}</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body">
+             <form #commentForm="ngForm">
+                <input type="hidden" ngModel="{{commentStock?.stockId}}"  name="stockId" class="form-control" id="stockId" placeholder="Id" />
+                <div class="form-group">
+                   <label for="name">Name</label>
+                   <input type="text" [readonly]="true" ngModel="{{commentStock?.name}}" name="name" class="form-control" id="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                   <label for="ticker">Ticker</label>
+                   <input type="text" [readonly]="true" ngModel="{{commentStock?.ticker}}" name="ticker" class="form-control" id="ticker" placeholder="Ticker">
+                </div>
+                <div class="form-group">
+                    <label for="name">Comentar</label>
+                    <input type="text" [(ngModel)]="comentario" name="comentario" class="form-control" id="comentario" placeholder="comentario" required="true">
+                 </div>
+                 <div class="modal-footer">
+                    <button type="button" [hidden]="true" id="closeButton" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                    <button (click)="insertComment(commentStock, commentStock?.stockId, comentario)" [disabled]="commentForm.invalid" type="submit" class="btn btn-primary" >Save comment</button>
+                 </div>
+             </form>
+          </div>
+       </div>
+    </div>
+</div>

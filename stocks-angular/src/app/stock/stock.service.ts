@@ -29,5 +29,9 @@ export class StockService {
       return this.http.delete<void>(`${this.apiServerUrl}/stock/delete/${stockId}`);
     }
 
+    public addComment(stock: Stock, stockId: number, comment: String, date: String): Observable<Stock>{
+      return this.http.put<Stock>(`${this.apiServerUrl}/stock/insertOpiniao/${stockId}/${comment}/${date}`, stock);
+    }
+
 
 }

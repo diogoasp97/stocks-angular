@@ -1,5 +1,5 @@
 export interface Opiniao{
     id: number;
     textoOpiniao: string;
-    date: Date;
+    date: string;
 }

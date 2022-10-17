@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Opiniao } from '../opiniao/opiniao';
 import { Stock } from './stock';
 import { StockService } from './stock.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-stock',
@@ -16,13 +16,14 @@ export class StockComponent implements OnInit {
   public editedStock: Stock;
   public deletedStock: Stock;
   public infoStock: Stock;
-  public comentarios: String[];
+  public commentStock: Stock;
+  public date: Date;
+  public comentario: string;
 
-  constructor(private stockService: StockService) { }
+  constructor(private stockService: StockService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.getStocks();
-    this.test();
   }
 
   public getStocks(): void {
@@ -36,12 +37,6 @@ export class StockComponent implements OnInit {
     );
   }
 
-  public test(): void{
-    for(const stock of this.stocks){
-      this.comentarios.push("lol");
-    }
-  }
-
   public onOpenModal(stock: Stock, mode: string): void{
     console.log("Entrou no open Modal com " + mode);
     const container = document.getElementById('main-container');
@@ -50,7 +45,6 @@ export class StockComponent implements OnInit {
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
     if(mode==='add'){
-      console.log("deveria dar add");
       button.setAttribute('data-target', '#addStockModal');
     }
     if(mode==='edit'){
@@ -64,6 +58,10 @@ export class StockComponent implements OnInit {
     if(mode==='info'){
       button.setAttribute('data-target', '#infoStockModal');
       this.infoStock = stock;
+    }
+    if(mode==='comment'){
+      button.setAttribute('data-target', '#commentStockModal');
+      this.commentStock = stock;
     }
 
     container.appendChild(button);
@@ -118,6 +116,21 @@ export class StockComponent implements OnInit {
     this.stockService.updateStock(stock).subscribe(
       (response: Stock) => {
         console.log(response);
+        this.getStocks();
+      }, 
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  public insertComment(stock: Stock, stockId: number, comment: string): void{
+    this.date = new Date(Date.now());
+    this.stockService.addComment(stock, stockId, comment, this.datePipe.transform(this.date, "yyyy-MM-dd")).subscribe(
+      (response: Stock) => {
+        console.log(response);
+        document.getElementById('closeButton').click();
+        this.comentario = '';
         this.getStocks();
       }, 
       (error: HttpErrorResponse) => {
